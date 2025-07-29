@@ -1,5 +1,3 @@
-Here's a properly formatted version of your content for a **GitHub README** file:
-
 ---
 
 ## ✈️ Travel Booking System — Overview
