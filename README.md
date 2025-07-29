@@ -42,4 +42,3 @@ This example is divided into **three major parts**:
 
 ---
 
-Let me know if you'd like to include architecture diagrams or service-specific setup instructions as well.
