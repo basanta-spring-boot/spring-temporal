@@ -1,4 +1,4 @@
----
+
 
 ## ✈️ Travel Booking System — Overview
 
@@ -12,7 +12,7 @@ This example is divided into **three major parts**:
    * 🚗 `TransportService` (Kafka Consumer)
 3. **Messaging / Communication Setup**
 
----
+
 
 ### 🧠 Travel Orchestrator (Temporal Workflow)
 
