@@ -4,17 +4,29 @@ import com.javatechie.activities.TravelActivities;
 import com.javatechie.dto.TravelRequest;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
+import io.temporal.workflow.SignalMethod;
 import io.temporal.workflow.Workflow;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
 @Service
-public class TravelWorkflowImpl implements TravelWorkflow{
+@Slf4j
+public class TravelWorkflowImpl implements TravelWorkflow {
 
+    private boolean isUserConfirmed = false;
+
+    @SignalMethod
+    public void sendConfirmationSignal() {
+        log.info("📩 Received user confirmation signal.");
+        isUserConfirmed = true;
+    }
 
     @Override
     public void bookTrip(TravelRequest travelRequest) {
+
+        log.info("🚀 Starting travel booking for user: {}", travelRequest.getUserId());
 
         TravelActivities activities =
                 Workflow.newActivityStub(TravelActivities.class,
@@ -29,7 +41,26 @@ public class TravelWorkflowImpl implements TravelWorkflow{
         activities.bookFlight(travelRequest);
         activities.bookHotel(travelRequest);
         activities.arrangeTransport(travelRequest);
-        activities.sendConfirmationEmail(travelRequest);
+
+        log.info("⏳ Waiting up to 2 minutes for user confirmation...");
+        boolean isConfirmed = Workflow
+                .await(
+                        Duration.ofMinutes(2),
+                        () -> isUserConfirmed
+                );
+
+        if (!isConfirmed) {
+            log.warn("❌ User did not confirm booking within 2 minutes. Cancelling booking.");
+            activities.cancelBooking(travelRequest);
+            activities.sendConfirmationEmail(travelRequest);
+        } else {
+            log.info("✅ User confirmed booking. Proceeding with confirmation.");
+            activities.confirmBooking(travelRequest);
+            activities.sendConfirmationEmail(travelRequest);
+        }
+
+        log.info("📦 Travel booking workflow completed for user: {}", travelRequest.getUserId());
+
         // The bookTrip method is the main entry point for booking a trip.
         // This method orchestrates the travel booking process by calling various activities.
         // It first books a flight, then a hotel, arranges transport, and finally sends

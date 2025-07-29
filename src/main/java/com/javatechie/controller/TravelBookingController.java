@@ -22,4 +22,10 @@ public class TravelBookingController {
         starter.startWorkflow(travelRequest);
         return ResponseEntity.ok("Travel booking workflow started for user: " + travelRequest.getUserId());
     }
+
+    @PostMapping("/confirm/{userId}")
+    public ResponseEntity<String> confirmBooking(@RequestParam String userId) {
+        starter.sendConfirmationSignal(userId);
+        return ResponseEntity.ok("✅ Booking confirmed by user!");
+    }
 }

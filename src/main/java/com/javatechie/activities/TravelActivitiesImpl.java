@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TravelActivitiesImpl implements TravelActivities {
 
-    private int hotelBookingAttempt = 0; // keep track of attempts
+   // private int hotelBookingAttempt = 0; // keep track of attempts
 
     @Override
     public void bookFlight(TravelRequest travelRequest) {
@@ -24,13 +24,13 @@ public class TravelActivitiesImpl implements TravelActivities {
     // or REST API call to hotel service
     @Override
     public void bookHotel(TravelRequest travelRequest) {
-        hotelBookingAttempt++;
-        log.info("🔥 Hotel booking attempt: {}", hotelBookingAttempt);
-
-        if (hotelBookingAttempt < 3) {
-            log.error("❌ Hotel booking failed on attempt {}", hotelBookingAttempt);
-            throw new RuntimeException("Simulated hotel booking failure!");
-        }
+//        hotelBookingAttempt++;
+//        log.info("🔥 Hotel booking attempt: {}", hotelBookingAttempt);
+//
+//        if (hotelBookingAttempt < 3) {
+//            log.error("❌ Hotel booking failed on attempt {}", hotelBookingAttempt);
+//            throw new RuntimeException("Simulated hotel booking failure!");
+//        }
 
         log.info("✅ Hotel booked for user: {} at destination: {} on date: {}",
                 travelRequest.getUserId(),
@@ -51,10 +51,24 @@ public class TravelActivitiesImpl implements TravelActivities {
     public void sendConfirmationEmail(TravelRequest travelRequest) {
         // REST API call to email service
         // or use a messaging system to send confirmation
-        log.info("Confirmation email sent to user: {} for travel to destination: {} on date: {}",
+        log.info("Booking status sent to user: {} ", travelRequest.getUserId());
+    }
+
+    @Override
+    public void confirmBooking(TravelRequest travelRequest) {
+        log.info("Booking confirmed for user: {} to destination: {} on date: {}",
                 travelRequest.getUserId(),
                 travelRequest.getDestination(),
                 travelRequest.getTravelDate());
+    }
+
+    @Override
+    public void cancelBooking(TravelRequest travelRequest) {
+        log.info("Booking cancelled for user: {} to destination: {} on date: {}",
+                travelRequest.getUserId(),
+                travelRequest.getDestination(),
+                travelRequest.getTravelDate());
+        // Logic to cancel the booking, e.g., REST API call to booking service
     }
 }
 

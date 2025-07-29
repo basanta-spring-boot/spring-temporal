@@ -9,5 +9,8 @@ public interface TravelActivities {
     void bookFlight(TravelRequest travelRequest);
     void bookHotel(TravelRequest travelRequest);
     void arrangeTransport(TravelRequest travelRequest);
+    void confirmBooking(TravelRequest travelRequest);
+    void cancelBooking(TravelRequest travelRequest);
     void sendConfirmationEmail(TravelRequest travelRequest);
+
 }
