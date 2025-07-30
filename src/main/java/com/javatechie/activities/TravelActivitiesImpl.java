@@ -19,6 +19,11 @@ public class TravelActivitiesImpl implements TravelActivities {
                 travelRequest.getTravelDate());
     }
 
+    @Override
+    public void cancelFlight(TravelRequest request) {
+        log.info("🛑 Cancelling flight for user {} because of failure ", request.getUserId());
+    }
+
 
     // gRPC call to hotel service
     // or REST API call to hotel service
@@ -39,12 +44,25 @@ public class TravelActivitiesImpl implements TravelActivities {
     }
 
     @Override
+    public void cancelHotel(TravelRequest request) {
+        log.info("🛑 Cancelling hotel for user {} because of failure", request.getUserId());
+    }
+
+    @Override
     public void arrangeTransport(TravelRequest travelRequest) {
         // Kafka message to transport service
         log.info("Transport arranged for user: {} at destination: {} on date: {}",
                 travelRequest.getUserId(),
                 travelRequest.getDestination(),
                 travelRequest.getTravelDate());
+
+        // Simulate a failure to demonstrate compensation
+        throw new RuntimeException("Simulated transport arrangement failure!");
+    }
+
+    @Override
+    public void cancelTransport(TravelRequest request) {
+        log.info("🛑 Cancelling transport for user {}", request.getUserId());
     }
 
     @Override
