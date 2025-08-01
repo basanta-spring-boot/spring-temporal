@@ -29,13 +29,6 @@ public class TravelActivitiesImpl implements TravelActivities {
     // or REST API call to hotel service
     @Override
     public void bookHotel(TravelRequest travelRequest) {
-//        hotelBookingAttempt++;
-//        log.info("🔥 Hotel booking attempt: {}", hotelBookingAttempt);
-//
-//        if (hotelBookingAttempt < 3) {
-//            log.error("❌ Hotel booking failed on attempt {}", hotelBookingAttempt);
-//            throw new RuntimeException("Simulated hotel booking failure!");
-//        }
 
         log.info("✅ Hotel booked for user: {} at destination: {} on date: {}",
                 travelRequest.getUserId(),
@@ -57,7 +50,7 @@ public class TravelActivitiesImpl implements TravelActivities {
                 travelRequest.getTravelDate());
 
         // Simulate a failure to demonstrate compensation
-        throw new RuntimeException("Simulated transport arrangement failure!");
+        //throw new RuntimeException("Simulated transport arrangement failure!");
     }
 
     @Override

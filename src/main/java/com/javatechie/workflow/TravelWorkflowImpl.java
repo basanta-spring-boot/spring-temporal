@@ -58,25 +58,27 @@ public class TravelWorkflowImpl implements TravelWorkflow {
 
             activities.arrangeTransport(travelRequest);
             saga.addCompensation(() -> activities.cancelTransport(travelRequest));
+
+            log.info("⏳ Waiting up to 2 minutes for user confirmation...");
+            boolean isConfirmed = Workflow
+                    .await(
+                            Duration.ofMinutes(2),
+                            () -> isUserConfirmed
+                    );
+
+            if (!isConfirmed) {
+                log.warn("❌ User did not confirm booking within 2 minutes. Cancelling booking.");
+                activities.cancelBooking(travelRequest);
+                activities.sendConfirmationEmail(travelRequest);
+            } else {
+                log.info("✅ User confirmed booking. Proceeding with confirmation.");
+                activities.confirmBooking(travelRequest);
+                activities.sendConfirmationEmail(travelRequest);
+            }
+
         } catch (Exception e) {
             log.error("❌ Error during travel booking workflow: {}", e.getMessage());
             saga.compensate();
-        }
-        log.info("⏳ Waiting up to 2 minutes for user confirmation...");
-        boolean isConfirmed = Workflow
-                .await(
-                        Duration.ofMinutes(2),
-                        () -> isUserConfirmed
-                );
-
-        if (!isConfirmed) {
-            log.warn("❌ User did not confirm booking within 2 minutes. Cancelling booking.");
-            activities.cancelBooking(travelRequest);
-            activities.sendConfirmationEmail(travelRequest);
-        } else {
-            log.info("✅ User confirmed booking. Proceeding with confirmation.");
-            activities.confirmBooking(travelRequest);
-            activities.sendConfirmationEmail(travelRequest);
         }
 
         log.info("📦 Travel booking workflow completed for user: {}", travelRequest.getUserId());
