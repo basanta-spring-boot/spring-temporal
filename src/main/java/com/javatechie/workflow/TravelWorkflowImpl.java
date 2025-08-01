@@ -29,6 +29,12 @@ public class TravelWorkflowImpl implements TravelWorkflow {
 
         log.info("🚀 Starting travel booking for user: {}", travelRequest.getUserId());
 
+        /*
+          This code creates a Temporal activity stub for the TravelActivities interface,
+          configuring it to retry failed activities up to 3 times and setting a timeout
+          of 10 seconds for each activity execution.
+          This ensures reliable and time-bound execution of travel-related activities within the workflow.
+        */
         TravelActivities activities =
                 Workflow.newActivityStub(TravelActivities.class,
                         ActivityOptions.newBuilder()

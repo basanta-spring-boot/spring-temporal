@@ -14,6 +14,12 @@ public class TravelBookingStarter {
     @Autowired
     private WorkflowServiceStubs serviceStubs;
 
+    /**
+     * Starts a new travel booking workflow for the given request.
+     * Initializes the workflow with a unique ID based on the user and submits the booking request.
+     *
+     * @param request the travel booking details
+     */
     public void startWorkflow(TravelRequest request) {
         WorkflowClient client = WorkflowClient.newInstance(serviceStubs);
 
